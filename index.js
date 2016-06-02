@@ -1,16 +1,16 @@
 'use strict';
 
-var React = require('react-native');
-var { StyleSheet, Text, View, TextInput, Animated } = React;
+import * as React from 'react';
+import { StyleSheet, Text, View, TextInput, Animated } form 'react-native';
 
-var FloatingLabel = React.createClass({
+const FloatingLabel = React.createClass({
   getInitialState: function() {
-    var initialPadding = 9;
-    var initialOpacity = 0;
+    let initialPadding = 9;
+    let initialOpacity = 0;
 
     if (this.props.visible) {
-      initialPadding = 5
-      initialOpacity = 1
+      initialPadding = 5;
+      initialOpacity = 1;
     }
 
     return {
@@ -160,7 +160,7 @@ var FloatLabelTextField = React.createClass({
   }
 });
 
-var styles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     height: 45,
@@ -206,4 +206,4 @@ var styles = StyleSheet.create({
   }
 });
 
-module.exports = FloatLabelTextField
+module.exports = FloatLabelTextField;
