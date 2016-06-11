@@ -3,14 +3,14 @@
 import * as React from 'react';
 import { StyleSheet, Text, View, TextInput, Animated } from 'react-native';
 
-const FloatingLabel = React.createClass({
+var FloatingLabel = React.createClass({
   getInitialState: function() {
-    let initialPadding = 9;
-    let initialOpacity = 0;
+    var initialPadding = 9;
+    var initialOpacity = 0;
 
     if (this.props.visible) {
-      initialPadding = 5;
-      initialOpacity = 1;
+      initialPadding = 5
+      initialOpacity = 1
     }
 
     return {
@@ -40,16 +40,18 @@ const FloatingLabel = React.createClass({
   }
 });
 
+const fieldMargin = 17
+
 var TextFieldHolder = React.createClass({
   getInitialState: function() {
     return {
-      marginAnim: new Animated.Value(this.props.withValue ? 10 : 0)
+      marginAnim: new Animated.Value(this.props.withValue ? fieldMargin : 0)
     };
   },
 
   componentWillReceiveProps: function(newProps) {
     return Animated.timing(this.state.marginAnim, {
-      toValue: newProps.withValue ? 10 : 0,
+      toValue: newProps.withValue ? fieldMargin : 0,
       duration: 230
     }).start();
   },
@@ -67,14 +69,16 @@ var FloatLabelTextField = React.createClass({
   getInitialState: function() {
     return {
       focussed: false,
-      text: this.props.value
+      text: this.props.value,
+      placeHolder: this.props.placeHolder,
     };
   },
 
-  componentWillReceiveProps: function(newProps) {
-    if (newProps.hasOwnProperty('value') && newProps.value !== this.state.text) {
-      this.setState({ text: newProps.value })
-    }
+  componentDidMount: function() {
+    if( !! this.props.focus )
+      setTimeout(() => {
+        this.refs.input.focus()
+      }, 500 )
   },
 
   withBorder: function() {
@@ -90,24 +94,20 @@ var FloatLabelTextField = React.createClass({
           <View style={styles.paddingView}></View>
           <View style={[styles.fieldContainer, this.withBorder()]}>
             <FloatingLabel visible={this.state.text}>
-              <Text style={[styles.fieldLabel, this.labelStyle()]}>{this.placeholderValue()}</Text>
+              <Text style={[styles.fieldLabel, this.labelStyle()]}
+                onPress={this.setFocus}>{this.placeHolderValue()}</Text>
             </FloatingLabel>
             <TextFieldHolder withValue={this.state.text}>
               <TextInput
-                placeholder={this.props.placeholder}
-                style={[styles.valueText]}
-                defaultValue={this.props.defaultValue}
+                ref='input'
+                placeholder={this.state.placeHolder}
+                style={[styles.valueText, this.props.inputStyle]}
                 value={this.state.text}
-                maxLength={this.props.maxLength}
-                selectionColor={this.props.selectionColor}
                 onFocus={this.setFocus}
                 onBlur={this.unsetFocus}
                 onChangeText={this.setText}
                 secureTextEntry={this.props.secureTextEntry}
                 keyboardType={this.props.keyboardType}
-                autoCapitalize={this.props.autoCapitalize}
-                autoCorrect={this.props.autoCorrect}
-                clearButtonMode={this.props.clearButtonMode}
               />
             </TextFieldHolder>
           </View>
@@ -134,14 +134,15 @@ var FloatLabelTextField = React.createClass({
   },
 
   labelStyle: function() {
-    if (this.state.focussed) {
-      return styles.focussed;
-    }
+    if (this.state.focussed)
+      return [ styles.focussed, this.props.labelFocusStyle ]
+    else
+      return this.props.labelStyle
   },
 
-  placeholderValue: function() {
+  placeHolderValue: function() {
     if (this.state.text) {
-      return this.props.placeholder;
+      return this.state.placeHolder;
     }
   },
 
@@ -154,6 +155,12 @@ var FloatLabelTextField = React.createClass({
     } catch (_error) {}
   },
 
+  setPlaceHolder: function(value) {
+    this.setState({
+      placeHolder: value
+    });
+  },
+
   withMargin: function() {
     if (this.state.text) {
       return styles.withMargin;
@@ -161,28 +168,30 @@ var FloatLabelTextField = React.createClass({
   }
 });
 
-const styles = StyleSheet.create({
+var styles = StyleSheet.create({
   container: {
     flex: 1,
-    height: 45,
+    height: 48,
     backgroundColor: 'white',
     justifyContent: 'center'
   },
   viewContainer: {
     flex: 1,
-    flexDirection: 'row'
+    flexDirection: 'row',
   },
   paddingView: {
-    width: 15
+    width: 15,
   },
   floatingLabel: {
+    paddingTop: 0,
     position: 'absolute',
     top: 0,
-    left: 0
+    left: 0,
   },
   fieldLabel: {
-    height: 10,
-    fontSize: 9,
+    height: 15,
+    fontSize: 12,
+    letterSpacing: -0.45,
     color: '#B1B1B1'
   },
   fieldContainer: {
@@ -195,16 +204,16 @@ const styles = StyleSheet.create({
     borderColor: '#C8C7CC',
   },
   valueText: {
-    height: 20,
-    fontSize: 16,
-    color: '#111111'
+    height: 30,
+    // fontSize: 16,
+    // color: '#111111',
   },
   withMargin: {
-    marginTop: 10
+    marginTop: 10,
   },
   focussed: {
-    color: "#1482fe"
+    color: "#1482fe",
   }
 });
 
-module.exports = FloatLabelTextField;
+module.exports = FloatLabelTextField
