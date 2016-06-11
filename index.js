@@ -1,7 +1,7 @@
 'use strict';
 
 import * as React from 'react';
-import { StyleSheet, Text, View, TextInput, Animated } form 'react-native';
+import { StyleSheet, Text, View, TextInput, Animated } from 'react-native';
 
 const FloatingLabel = React.createClass({
   getInitialState: function() {
