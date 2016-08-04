@@ -115,6 +115,11 @@ var FloatLabelTextField = React.createClass({
       </View>
     );
   },
+
+  focus: function() {
+    this.refs.input.focus()
+  },
+
   setFocus: function() {
     this.setState({
       focussed: true
